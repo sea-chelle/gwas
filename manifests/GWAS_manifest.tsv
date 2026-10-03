@@ -1,0 +1,8 @@
+Trait	Study	File	Ancestry	Genome_build	Effect	Per_SNP_N	Sample_size	Notes
+ASD	Grove_2019	ASD_Grove_2019/iPSYCH-PGC_ASD_Nov2017.gz	EUR	GRCh37	OR	No	46350	iPSYCH-PGC ASD
+ADHD	Demontis_2023	ADHD_Demontis_2023/ADHD2022_iPSYCH_deCODE_PGC.meta.gz	EUR	GRCh37	OR	Yes	NA	iPSYCH-deCODE-PGC
+ANX	Strom_2026	ANX_Storm_2026/ANX_2026_daner_fullANX_v12_woUTAH_11022026.gz	EUR	GRCh37	OR	Yes	NA	UTAH excluded; >=70% per-SNP N filter in published analysis
+PTSD	Nievergelt_2024	PTSD_Nievergelt_2024/eur_ptsdcasecontrol_pcs_v4_aug3_2021.vcf.gz	EUR	GRCh37	BETA	Yes	NA	European case-control release
+MDD	Adams_2025	MDD_PGC_2025/pgc-mdd2025_no23andMe_eur_v3-49-24-11.tsv.gz	EUR	GRCh37	BETA	Yes	NA	No 23andMe; QC'd for Neff
+SCZ	Trubetskoy_2022	SCZ_Trubetskoy_2022/PGC3_SCZ_wave3.european.autosome.public.v3.vcf.tsv.gz	EUR	GRCh37	BETA	Yes	NA	European autosomal release
+BD	OConnell_2025	BD_OConnell_2025/bip2024_eur_no23andMe.gz	EUR	hg19	OR	Yes	NA	No 23andMe; >=75% Neff; MAF/MAC and DENTIST QC
