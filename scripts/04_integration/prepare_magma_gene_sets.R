@@ -66,7 +66,7 @@ sapply(atac_gene_sets_mouse, length)
 # combine RNA-seq, WGCNA and ATAC-seq gene sets
 gene_sets_mouse <- c(rna_gene_sets_mouse,
                      list(WGCNA_grey60 = wgcna_gene_set_mouse),
-                     atac_gene_sets_mousd)
+                     atac_gene_sets_mouse)
 
 # check number of genes in each mouse gene set
 sapply(gene_sets_mouse, length)
