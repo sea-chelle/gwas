@@ -149,9 +149,18 @@ rna_gene_regions <- lapply(gene_sets_human, function(genes) {
     arrange(as.numeric(chromosome), start)
 })
 
-# check resulting regions
-sapply(rna_gene_regions, nrow)
-head(rna_gene_regions$RNA_Overall_60)
+# convert RNA-seq regions from 1-based genomic coordinates to 0-based BED format
+rna_bed <- lapply(rna_gene_regions, function(x) {
+  x %>%
+    transmute(chr = paste0("chr", chromosome),
+              start = start - 1L,
+              end = end,
+              gene = ensembl_gene_id)
+})
+
+# check BED-formatted RNA-seq regions
+sapply(rna_bed, nrow)
+head(rna_bed$RNA_Overall_60)
 
 # prepare ATAC-seq DAR coordinates for liftOver
 atac_regions_mouse <- lapply(master_dar_tables, function(x) {
@@ -182,16 +191,16 @@ head(atac_bed$Overall)
 annotation_dir <- file.path(proj_dir, "ldsc/annotations_input")
 dir.create(annotation_dir, recursive = TRUE, showWarnings = FALSE)
 
-# export RNA-seq +/- 100 kb GRCh37 regions
-for (set_name in names(rna_gene_regions)) {
+# export RNA-seq GRCh37 regions as BED4 files
+for (set_name in names(rna_bed)) {
   
-  write.table(rna_gene_regions[[set_name]],
+  write.table(rna_bed[[set_name]],
               file = file.path(annotation_dir,
-                               paste0(set_name, "_GRCh37_100kb.tsv")),
+                               paste0(set_name, "_GRCh37_100kb.bed")),
               sep = "\t",
               quote = FALSE,
               row.names = FALSE,
-              col.names = TRUE)
+              col.names = FALSE)
 }
 
 # export ATAC-seq mm39 regions as BED4 files
