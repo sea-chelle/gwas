@@ -66,22 +66,25 @@ for TRAIT in "$@"; do
 
   # read manifest fields
   IFS=$'\t' read -r \
-    TRAIT_NAME \
-    STUDY \
-    ANALYSIS_ID \
-    FILE \
-    ANCESTRY \
-    GENOME_BUILD \
-    EFFECT \
-    SNP_COL \
-    CHR_COL \
-    BP_COL \
-    P_COL \
-    N_METHOD \
-    N_SOURCE \
-    N_TRANSFORM \
-    SAMPLE_SIZE \
-    NOTES <<< "${TRAIT_ROW}"
+  TRAIT_NAME \
+  STUDY \
+  ANALYSIS_ID \
+  FILE \
+  ANCESTRY \
+  GENOME_BUILD \
+  EFFECT \
+  SNP_COL \
+  CHR_COL \
+  BP_COL \
+  A1_COL \
+  A2_COL \
+  INFO_COL \
+  P_COL \
+  N_METHOD \
+  N_SOURCE \
+  N_TRANSFORM \
+  SAMPLE_SIZE \
+  NOTES <<< "${TRAIT_ROW}"
 
   INPUT_FILE="${DATA_DIR}/${FILE}"
 
