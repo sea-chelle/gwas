@@ -86,7 +86,7 @@ Detailed software dependencies are provided in `environment/environment.yml`.
 ### Methods
 - MAGMA: [de Leeuw et al. (2015), *PLoS Computational Biology*](https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1004219)
 - LD Score regression: [Bulik-Sullivan et al. (2015), *Nature Genetics*](https://www.nature.com/articles/ng.3211)
-- S-LDSC:[Stratified LD Score regression: Finucane et al. (2015), *Nature Genetics*](https://www.nature.com/articles/ng.3404)
+- S-LDSC: [Stratified LD Score regression: Finucane et al. (2015), *Nature Genetics*](https://www.nature.com/articles/ng.3404)
 
 ### GWAS
 - ADHD: [Demontis et al. (2023), *Nature Genetics*](https://www.nature.com/articles/s41588-022-01285-8)
