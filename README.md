@@ -16,14 +16,14 @@ Raw GWAS summary statistics and large reference datasets are not distributed wit
 ### GWAS summary statistics
 The current manifest includes summary statistics for:
 - Attention-deficit/hyperactivity disorder (ADHD)
-- Autism spectrum disorder (ASD)
 - Anxiety disorders (ANX)
+- Autism spectrum disorder (ASD)
+- Bipolar disorder (BD)
 - Major depressive disorder (MDD)
 - Post-traumatic stress disorder (PTSD)
 - Schizophrenia (SCZ)
-- Bipolar disorder (BD)
 
-Details of the GWAS study, expected input file, genome build, column names and sample-size handling are provided in `manifests/GWAS_manifest.tsv`. Where permitted by the original data providers, summary statistics can be obtained from the Psychiatric Genomics Consortium (PGC), the NHGRI-EBI GWAS Catalog, or the repositories associated with the original publications.
+Details of the GWAS study, expected input file, genome build, column names and sample-size handling are provided in `manifests/GWAS_manifest.tsv`. Raw GWAS summary statistics are not redistributed in this repository. Summary statistics can be obtained from the [Psychiatric Genomics Consortium (PGC)](https://pgc.unc.edu/for-researchers/download-results/).
 
 ### MAGMA reference data
 MAGMA requires the MAGMA executable, gene-location files and an appropriate genotype reference panel for gene analysis.
@@ -33,7 +33,7 @@ This workflow uses:
 - NCBI37.3 gene locations
 - European 1000 Genomes Phase 3 reference genotypes
 
-These resources can be obtained from the MAGMA website.
+These resources can be obtained from the [MAGMA website](https://cncr.nl/research/magma/).
 
 ### S-LDSC reference data
 S-LDSC analyses require reference genotype and LD-score resources. This workflow uses:
@@ -43,7 +43,7 @@ S-LDSC analyses require reference genotype and LD-score resources. This workflow
 - European regression weights
 - baselineLD v2.3 annotations and LD scores
 
-These reference files are available from the LDSC reference-data repository.
+These reference files are available from the [LDSC reference-data repository.](https://zenodo.org/records/10515792). S-LDSC analyses in this workflow use the [CBIIT Python 3 implementation of LDSC](https://github.com/CBIIT/ldsc).
 
 ## Repository structure
 
@@ -89,10 +89,10 @@ Detailed software dependencies are provided in `environment/environment.yml`.
 - Stratified LD Score regression: Finucane et al. (2015).
 
 ### GWAS
-- ASD - Grove et al. (2019)
-- ADHD - Demontis et al. (2023)
-- Anxiety - Storm et al. (2026)
-- MDD - Adams et al. (2025)
-- PTSD - Nievergelt et al. (2024)
-- Schizophrenia - Trubetskoy et al. (2022)
-- Bipolar disorder - O'Connell et al. (2025)
+- ADHD - [Demontis et al. (2023), *Nature Genetics*](https://www.nature.com/articles/s41588-022-01285-8)
+- Anxiety - [Storm et al. (2026), *Nature Genetics*](https://www.cell.com/cell/fulltext/S0092-8674(24)01415-6)
+- ASD - [Grove et al. (2019), *Nature Genetics*](https://www.nature.com/articles/s41588-019-0344-8)
+- BD - [O'Connell et al. (2025), *Nature*](https://www.nature.com/articles/s41586-024-08468-9)
+- MDD - [Adams et al. (2025), *Cell*](https://www.cell.com/cell/fulltext/S0092-8674(24)01415-6)
+- PTSD - [Nievergelt et al. (2024), *Nature Genetics*](https://www.nature.com/articles/s41588-024-01707-9)
+- SCZ - [Trubetskoy et al. (2022), *Nature*](https://www.nature.com/articles/s41586-022-04434-5)
