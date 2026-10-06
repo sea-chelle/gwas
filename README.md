@@ -10,6 +10,15 @@ MAGMA is used to perform gene-level association analysis and test enrichment of 
 ### S-LDSC
 S-LDSC is used to test whether genomic annotations derived from transcriptomic or epigenomic analyses explain disproportionate SNP heritability. Custom annotations are analysed conditional on the baselineLD v2.3 model. The workflow also supports joint S-LDSC models for directly comparing related annotations using regression coefficient covariance. Examples include sex (male vs female comparisons).
 
+### Locus-level integration
+Published fine-mapping results were integrated with transcriptomic and regulatory annotations from RNA-seq and ATAC-seq data to identify candidate psychiatric risk variants overlapping associated genomic features. Fine-mapped variants were defined according to the credible-set or candidate variant criteria reported by each original GWAS study.
+
+Fine-mapped variants were intersected with:
+- ±100 kb windows surrounding stress-responsive RNA-seq genes
+- lifted human (GRCh37/hg19) coordinates of stress-responsive ATAC-seq regions
+
+Intersections were performed separately for each annotation using BEDTools.
+
 ## Data and reference resources
 Raw GWAS summary statistics and large reference datasets are not distributed with this repository and must be downloaded separately.
 
