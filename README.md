@@ -17,7 +17,19 @@ Fine-mapped variants were intersected with:
 - ±100 kb windows surrounding stress-responsive RNA-seq genes
 - lifted human (GRCh37/hg19) coordinates of stress-responsive ATAC-seq regions
 
-Intersections were performed separately for each annotation using BEDTools.
+Intersections were performed separately for each annotation using BEDTools. 
+
+| Trait | Study | Fine-mapping method / inclusion criterion | Variants |
+|---|---|---|---:|
+| ASD | Grove et al. 2019 | Variants in published CAVIAR credible sets | 380 |
+| ADHD | Demontis et al. 2023 | Variants included in credible sets identified by all three methods: PAINTOR, CAVIARBF and FINEMAP | 1,139 |
+| ANX | Strom et al. 2026 | Variants from six reported FINEMAP credible sets with configuration posterior probability >0.95 | 30 |
+| MDD | Adams et al. 2025 | Variants in published PolyFun/SuSiE 95% credible causal sets | 14,652 |
+| PTSD | Nievergelt et al. 2024 | Variants in published fine-mapping credible sets | 2,069 |
+| SCZ | Trubetskoy et al. 2022 | Variants in FINEMAP 95% credible sets for 249 regions predicted to contain ≤3 causal variants (`k < 3.5`) | 20,591 |
+| BD | O'Connell et al. 2025 | Published fine-mapped variants with PIP >0.5; full 95% credible-set membership was not publicly available | 80 |
+
+Fine-mapping approaches and reporting criteria differed between studies. Variants were therefore selected according to the published credible-set or fine-mapped candidate definitions for each study rather than by imposing a uniform variant-level posterior probability threshold. Variant counts should consequently not be compared directly between disorders.
 
 ## Data and reference resources
 Raw GWAS summary statistics and large reference datasets are not distributed with this repository and must be downloaded separately.
