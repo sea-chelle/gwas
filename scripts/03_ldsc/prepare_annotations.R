@@ -4,12 +4,15 @@
 # mouse genes are mapped to high-confidence human orthologues and converted to
 # GRCh37 genomic regions spanning the gene body +/- 100 kb.
 #
-# ATAC-seq annotations are derived directly from significant DAR coordinates
+# ATAC-seq annotations are derived from significant DARs and consensus peaks
 # and converted to BED format for cross-species liftOver from mm39 to hg19.
 
 # get required packages
 library(tidyverse)
 library(biomaRt)
+
+# path to project directory
+proj_dir <- file.path("path/to/project")
 
 # set working directory
 setwd(proj_dir)
@@ -52,12 +55,9 @@ orthologue_map <- getBM(attributes = c("ensembl_gene_id",
                         mart = mouse_mart)
 
 # simplify column names
-colnames(orthologue_map) <- c("mouse_ensembl", 
-                              "mouse_symbol", 
-                              "human_ensembl", 
-                              "human_symbol", 
-                              "orthology_type", 
-                              "orthology_confidence")
+colnames(orthologue_map) <- c("mouse_ensembl", "mouse_symbol",
+                              "human_ensembl", "human_symbol",
+                              "orthology_type", "orthology_confidence")
 
 # retain high-confidence human orthologues
 orthologue_map_highconf <- orthologue_map %>%
@@ -82,7 +82,7 @@ gene_sets_human <- lapply(rna_gene_sets_mouse, function(mouse_genes) {
     filter(mouse_ensembl %in% mouse_genes) %>%
     pull(human_ensembl) %>%
     unique()
-})
+  })
 
 # check number of genes in each human gene set
 sapply(gene_sets_human, length)
@@ -91,15 +91,13 @@ sapply(gene_sets_human, length)
 all_human_genes <- unique(unlist(gene_sets_human))
 
 # connect to GRCh37 Ensembl human dataset
-human_mart_grch37 <- useEnsembl(biomart = "genes",
-                                dataset = "hsapiens_gene_ensembl",
+human_mart_grch37 <- useEnsembl(biomart = "genes", 
+                                dataset = "hsapiens_gene_ensembl", 
                                 GRCh = 37)
 
 # retrieve GRCh37 genomic coordinates
-human_gene_coords <- getBM(attributes = c("ensembl_gene_id",
-                                          "chromosome_name",
-                                          "start_position",
-                                          "end_position"),
+human_gene_coords <- getBM(attributes = c("ensembl_gene_id", "chromosome_name", "start_position", 
+"end_position"),
                            filters = "ensembl_gene_id",
                            values = all_human_genes,
                            mart = human_mart_grch37)
@@ -108,10 +106,8 @@ human_gene_coords <- getBM(attributes = c("ensembl_gene_id",
 dim(human_gene_coords)
 head(human_gene_coords)
 
-# check how many human genes there were originally
-length(all_human_genes)
-
 # check how many human genes were mapped to GRCh37 coordinates
+length(all_human_genes)
 length(unique(human_gene_coords$ensembl_gene_id))
 
 # check how many genes are on each chromosome
@@ -130,10 +126,10 @@ length(unique(human_gene_coords_autosomal$ensembl_gene_id))
 human_gene_coords %>%
   filter(!chromosome_name %in% as.character(1:22))
 
-# check how many genes in each set remain after mapping and filtering non-autosomal genes
+# check how many genes in each set remain after mapping
 sapply(gene_sets_human, function(genes) {
   sum(genes %in% human_gene_coords_autosomal$ensembl_gene_id)
-})
+  })
 
 # create +/- 100 kb GRCh37 regions for each RNA-seq gene set
 rna_gene_regions <- lapply(gene_sets_human, function(genes) {
@@ -147,7 +143,7 @@ rna_gene_regions <- lapply(gene_sets_human, function(genes) {
                   start,
                   end) %>%
     arrange(as.numeric(chromosome), start)
-})
+  })
 
 # convert RNA-seq regions from 1-based genomic coordinates to 0-based BED format
 rna_bed <- lapply(rna_gene_regions, function(x) {
@@ -156,24 +152,13 @@ rna_bed <- lapply(rna_gene_regions, function(x) {
               start = start - 1L,
               end = end,
               gene = ensembl_gene_id)
-})
+  })
 
 # check BED-formatted RNA-seq regions
 sapply(rna_bed, nrow)
-head(rna_bed$RNA_Overall_60)
+lapply(rna_bed, head)
 
 # prepare ATAC-seq DAR coordinates for liftOver
-atac_regions_mouse <- lapply(master_dar_tables, function(x) {
-  x %>%
-    dplyr::select(seqnames, start, end, peak) %>%
-    distinct()
-})
-
-# check number of DARs in each ATAC-seq annotation
-sapply(atac_regions_mouse, nrow)
-lapply(atac_regions_mouse, head)
-
-# convert DARs from 1-based genomic coordinates to 0-based BED format for liftOver
 atac_bed <- lapply(master_dar_tables, function(x) {
   x %>%
     transmute(chr = as.character(seqnames),
@@ -181,36 +166,56 @@ atac_bed <- lapply(master_dar_tables, function(x) {
               end = end,
               peak = peak) %>%
     distinct()
-})
+  })
 
 # check BED-formatted DARs
 sapply(atac_bed, nrow)
-head(atac_bed$Overall)
+lapply(atac_bed, head)
+
+# prepare consensus ATAC-seq peaks for liftOver
+consensus_bed <- comparisons$consensus$anno %>%
+  dplyr::select(seqnames, start, end) %>%
+  distinct() %>%
+  transmute(chr = as.character(seqnames),
+            start = start - 1L,
+            end = end,
+            peak = paste0("consensus_", row_number()))
+
+# add consensus peaks to ATAC-seq annotations
+atac_bed$Consensus <- consensus_bed
+
+# check number of regions in each ATAC-seq annotation
+sapply(atac_bed, nrow)
+head(atac_bed$Consensus)
 
 # create output directory
 annotation_dir <- file.path(proj_dir, "ldsc/annotations_input")
 dir.create(annotation_dir, recursive = TRUE, showWarnings = FALSE)
 
-# export RNA-seq GRCh37 regions as BED4 files
+# export RNA-seq GRCh37 regions as BED files
 for (set_name in names(rna_bed)) {
   
   write.table(rna_bed[[set_name]],
-              file = file.path(annotation_dir,
-                               paste0(set_name, "_GRCh37_100kb.bed")),
-              sep = "\t",
-              quote = FALSE,
-              row.names = FALSE,
-              col.names = FALSE)
-}
+              file = file.path(annotation_dir, paste0(set_name, "_GRCh37_100kb.bed")),
+              sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
+  }
 
-# export ATAC-seq mm39 regions as BED4 files
+# export ATAC-seq mm39 regions as BED files
 for (group in names(atac_bed)) {
   
   write.table(atac_bed[[group]],
-              file = file.path(annotation_dir,
-                               paste0("ATAC_", group, "_mm39.bed")),
+              file = file.path(annotation_dir, paste0("ATAC_", group, "_mm39.bed")),
               sep = "\t",
               quote = FALSE,
               row.names = FALSE,
               col.names = FALSE)
-}
+  }
+
+# summarise exported annotations
+cat("\nRNA-seq annotations:\n")
+print(sapply(rna_bed, nrow))
+
+cat("\nATAC-seq annotations:\n")
+print(sapply(atac_bed, nrow))
+
+cat("\nAnnotation BED files exported to:\n", annotation_dir, "\n")
